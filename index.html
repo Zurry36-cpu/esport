@@ -17,9 +17,19 @@
       overflow-y: auto; transition: 0.3s; }
     nav ul { list-style: none; }
     nav ul li { padding: 12px 20px; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s; }
-    nav ul li:hover { background: #333; border-left: 4px solid #00c853; }
+    nav ul li:hover, nav ul li.active { background: #333; border-left: 4px solid #00c853; }
     main { margin-left: 220px; margin-top: 80px; padding: 20px; }
     h2 { margin-bottom: 15px; border-bottom: 2px solid #00c853; padding-bottom: 5px; }
+
+    /* Notícias */
+    .news-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+    .news-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+    .news-card:hover { transform: scale(1.02); }
+    .news-card img { width: 100%; height: 150px; object-fit: cover; }
+    .news-card h4 { padding: 10px; font-size: 1.1em; }
+    .news-card p { padding: 0 10px 10px; font-size: 0.9em; color: #ccc; }
+
+    /* Jogos */
     .match-card { background: #1e1e1e; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between;
       align-items: center; border-radius: 8px; transition: transform 0.2s; cursor: pointer; }
     .match-card:hover { transform: scale(1.02); }
@@ -33,6 +43,7 @@
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     footer { text-align: center; background: #1a1a1a; padding: 10px; margin-top: 20px; }
     #loading { text-align:center; padding:20px; }
+
     @media (max-width: 768px) {
       nav { display: none; width: 100%; height: auto; position: relative; }
       nav.active { display: block; }
@@ -49,11 +60,7 @@
     ul.details { list-style: none; padding: 0; margin: 10px 0 20px; }
     ul.details li { padding: 8px 0; border-bottom: 1px solid #333; display: flex; align-items: center; }
     .event-time { background: #00c853; color: white; padding: 2px 6px; border-radius: 12px; font-size: 0.8em; margin-right: 10px; }
-    .event-type { margin-right: 5px; }
-    .event-player { font-weight: bold; }
-    .event-team { color: #aaa; font-size: 0.9em; margin-left: 5px; }
     .yellow-card { color: #ffeb3b; }
-    .red-card { color: #f44336; }
   </style>
 </head>
 <body>
@@ -64,33 +71,62 @@
   </header>
   <nav>
     <ul>
-      <li>⚽ Futebol</li><li>🏀 Basquete</li><li>🎾 Tênis</li><li>🏐 Vôlei</li><li>🏒 Hóquei</li><li>⚾ Beisebol</li>
+      <li class="active" data-section="home">🏠 Home</li>
+      <li data-section="matches">⚽ Partidas</li>
+      <li>🏀 Basquete</li><li>🎾 Tênis</li><li>🏐 Vôlei</li><li>🏒 Hóquei</li><li>⚾ Beisebol</li>
     </ul>
   </nav>
+
   <main>
-    <div id="loading">Carregando partidas...</div>
-    <div id="conteudo" style="display:none;">
-      <h2>Ao Vivo</h2>
-      <div class="match-card live" data-info='{
-        "events": [
-          {"type": "goal", "time": "12", "player": "Gabriel Jesus", "team": "Arsenal"},
-          {"type": "goal", "time": "33", "player": "Bukayo Saka", "team": "Arsenal"},
-          {"type": "goal", "time": "55", "player": "Raheem Sterling", "team": "Chelsea"},
-          {"type": "yellow", "time": "28", "player": "Thiago Silva", "team": "Chelsea"},
-          {"type": "sub", "time": "65", "playerOut": "Kai Havertz", "playerIn": "Eddie Nketiah", "team": "Arsenal"}
-        ]}'>
-        <div class="teams">
-          <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">Arsenal</div>
-          <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Chelsea_FC.svg">Chelsea</div>
+    <!-- HOME -->
+    <section id="home-section">
+      <h2>Últimas Notícias</h2>
+      <div class="news-container">
+        <div class="news-card">
+          <img src="https://source.unsplash.com/400x200/?soccer" alt="Notícia">
+          <h4>Arsenal vence clássico e assume liderança</h4>
+          <p>Com gols de Gabriel Jesus e Saka, o Arsenal bateu o Chelsea e assumiu a liderança da Premier League...</p>
         </div>
-        <div class="score">2 - 1</div>
-        <div class="status">68'</div>
+        <div class="news-card">
+          <img src="https://source.unsplash.com/400x200/?stadium" alt="Notícia">
+          <h4>Final da Champions terá público recorde</h4>
+          <p>Expectativa é de mais de 80 mil torcedores para a grande decisão da Champions League este ano...</p>
+        </div>
+        <div class="news-card">
+          <img src="https://source.unsplash.com/400x200/?football" alt="Notícia">
+          <h4>Mbappé quebra recorde de gols</h4>
+          <p>O atacante francês ultrapassou a marca histórica de 50 gols em uma única temporada...</p>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- PARTIDAS -->
+    <section id="matches-section" style="display:none;">
+      <div id="loading">Carregando partidas...</div>
+      <div id="conteudo" style="display:none;">
+        <h2>Ao Vivo</h2>
+        <div class="match-card live" data-info='{
+          "events": [
+            {"type": "goal", "time": "12", "player": "Gabriel Jesus", "team": "Arsenal"},
+            {"type": "goal", "time": "33", "player": "Bukayo Saka", "team": "Arsenal"},
+            {"type": "goal", "time": "55", "player": "Raheem Sterling", "team": "Chelsea"},
+            {"type": "yellow", "time": "28", "player": "Thiago Silva", "team": "Chelsea"},
+            {"type": "sub", "time": "65", "playerOut": "Kai Havertz", "playerIn": "Eddie Nketiah", "team": "Arsenal"}
+          ]}'>
+          <div class="teams">
+            <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">Arsenal</div>
+            <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Chelsea_FC.svg">Chelsea</div>
+          </div>
+          <div class="score">2 - 1</div>
+          <div class="status">68'</div>
+        </div>
+      </div>
+    </section>
   </main>
+
   <footer>&copy; 2025 FlashScore Pro - Todos os direitos reservados</footer>
 
-  <!-- Modal de detalhes -->
+  <!-- Modal -->
   <div class="modal" id="matchModal">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
@@ -100,10 +136,12 @@
   </div>
 
   <script>
+    // Menu toggle mobile
     document.getElementById('menu-toggle').addEventListener('click', () => {
       document.querySelector('nav').classList.toggle('active');
     });
 
+    // Loading partidas
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('loading').style.display = 'none';
@@ -111,6 +149,7 @@
       }, 1000);
     });
 
+    // Atualização placar
     setInterval(() => {
       const scoreEl = document.querySelector('.live .score');
       if (scoreEl) {
@@ -122,7 +161,17 @@
       }
     }, 5000);
 
-    // Modal de detalhes
+    // Troca de seções
+    document.querySelectorAll('nav ul li[data-section]').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
+        item.classList.add('active');
+        document.getElementById('home-section').style.display = item.dataset.section === 'home' ? 'block' : 'none';
+        document.getElementById('matches-section').style.display = item.dataset.section === 'matches' ? 'block' : 'none';
+      });
+    });
+
+    // Modal
     const modal = document.getElementById('matchModal');
     const closeModal = document.getElementById('closeModal');
 
@@ -131,73 +180,25 @@
         const data = JSON.parse(card.dataset.info);
         const matchInfo = document.getElementById('matchInfo');
         matchInfo.innerHTML = '';
-        
-        // Organiza eventos por tempo
+
         data.events.sort((a, b) => b.time - a.time);
-        
-        // Agrupa por tipo de evento
-        const eventsByType = {
-          goal: [],
-          yellow: [],
-          red: [],
-          sub: []
-        };
-        
-        data.events.forEach(event => {
-          eventsByType[event.type].push(event);
-        });
-        
-        // Cria HTML para cada tipo de evento
-        if (eventsByType.goal.length > 0) {
-          const goalsHtml = document.createElement('div');
-          goalsHtml.innerHTML = '<h4>Gols</h4><ul class="details"></ul>';
-          eventsByType.goal.forEach(goal => {
+
+        if (data.events.length > 0) {
+          const eventsHtml = document.createElement('ul');
+          eventsHtml.classList.add('details');
+          data.events.forEach(ev => {
             const li = document.createElement('li');
-            li.innerHTML = `
-              <span class="event-time">${goal.time}'</span>
-              <span class="event-type">⚽</span>
-              <span class="event-player">${goal.player}</span>
-              <span class="event-team">(${goal.team})</span>
-            `;
-            goalsHtml.querySelector('ul').appendChild(li);
+            if (ev.type === 'goal') {
+              li.innerHTML = `<span class="event-time">${ev.time}'</span>⚽ ${ev.player} <small>(${ev.team})</small>`;
+            } else if (ev.type === 'yellow') {
+              li.innerHTML = `<span class="event-time">${ev.time}'</span><span class="yellow-card">🟨</span> ${ev.player} <small>(${ev.team})</small>`;
+            } else if (ev.type === 'sub') {
+              li.innerHTML = `<span class="event-time">${ev.time}'</span>🔄 ${ev.playerOut} ⇄ ${ev.playerIn} <small>(${ev.team})</small>`;
+            }
+            eventsHtml.appendChild(li);
           });
-          matchInfo.appendChild(goalsHtml);
+          matchInfo.appendChild(eventsHtml);
         }
-        
-        if (eventsByType.yellow.length > 0) {
-          const cardsHtml = document.createElement('div');
-          cardsHtml.innerHTML = '<h4>Cartões Amarelos</h4><ul class="details"></ul>';
-          eventsByType.yellow.forEach(card => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-              <span class="event-time">${card.time}'</span>
-              <span class="event-type yellow-card">🟨</span>
-              <span class="event-player">${card.player}</span>
-              <span class="event-team">(${card.team})</span>
-            `;
-            cardsHtml.querySelector('ul').appendChild(li);
-          });
-          matchInfo.appendChild(cardsHtml);
-        }
-        
-        if (eventsByType.sub.length > 0) {
-          const subsHtml = document.createElement('div');
-          subsHtml.innerHTML = '<h4>Substituições</h4><ul class="details"></ul>';
-          eventsByType.sub.forEach(sub => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-              <span class="event-time">${sub.time}'</span>
-              <span class="event-type">🔄</span>
-              <span class="event-player">${sub.playerOut}</span>
-              <span> ⇄ </span>
-              <span class="event-player">${sub.playerIn}</span>
-              <span class="event-team">(${sub.team})</span>
-            `;
-            subsHtml.querySelector('ul').appendChild(li);
-          });
-          matchInfo.appendChild(subsHtml);
-        }
-        
         modal.style.display = 'flex';
       });
     });
