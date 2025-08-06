@@ -3,153 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SportsHub</title>
+  <title>FlashScore Clone</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: #121212;
+      color: #fff;
       margin: 0;
       padding: 0;
-      color: #333;
+      display: grid;
+      grid-template-columns: 250px 1fr;
     }
     header {
-      background: #0d47a1;
-      color: #fff;
+      grid-column: span 2;
+      background: #1e1e1e;
       padding: 20px;
       text-align: center;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #00ff00;
     }
     nav {
-      background: #1565c0;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-    .banner {
-      background: url('https://source.unsplash.com/1200x400/?sports,stadium') center/cover;
-      height: 300px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 2em;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px #000;
-    }
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 20px auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: white;
+      background: #1e1e1e;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      height: calc(100vh - 60px);
+      overflow-y: auto;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    nav ul {
+      list-style: none;
+      padding: 0;
     }
-    table th, table td {
-      border: 1px solid #ddd;
+    nav ul li {
       padding: 10px;
-      text-align: center;
+      cursor: pointer;
+      border-bottom: 1px solid #333;
     }
-    table th {
-      background: #1976d2;
-      color: white;
+    nav ul li:hover {
+      background: #333;
+    }
+    main {
+      padding: 20px;
+      background: #181818;
+      overflow-y: auto;
+    }
+    .live-match {
+      background: #282828;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 5px solid #00ff00;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+    }
+    .match {
+      background: #202020;
+      padding: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+    }
+    .teams {
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+    }
+    .score {
+      font-size: 1.5em;
+      color: #fff;
     }
     footer {
-      background: #0d47a1;
-      color: white;
+      grid-column: span 2;
+      background: #1e1e1e;
       text-align: center;
       padding: 10px;
-      margin-top: 20px;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>SportsHub</h1>
-    <p>Seu portal de esportes</p>
-  </header>
+  <header>FlashScore Clone</header>
   <nav>
-    <a href="#">Início</a>
-    <a href="#">Classificação</a>
-    <a href="#">Próximos Jogos</a>
-    <a href="#">Resultados</a>
+    <ul>
+      <li>Futebol</li>
+      <li>Basquete</li>
+      <li>Tênis</li>
+      <li>Vôlei</li>
+      <li>Hóquei</li>
+      <li>Beisebol</li>
+    </ul>
   </nav>
-  <section class="banner">
-    Destaques do Campeonato
-  </section>
-
-  <div class="container">
-    <!-- Tabela de Classificação -->
-    <div class="card">
-      <h2>Classificação</h2>
-      <table>
-        <tr>
-          <th>Posição</th>
-          <th>Time</th>
-          <th>Pontos</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Time A</td>
-          <td>45</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Time B</td>
-          <td>42</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Time C</td>
-          <td>39</td>
-        </tr>
-      </table>
+  <main>
+    <h2>Ao Vivo</h2>
+    <div class="live-match">
+      <div class="teams">
+        <span>Time A</span>
+        <span>Time B</span>
+      </div>
+      <div class="score">2 - 1</div>
+      <div>68'</div>
     </div>
 
-    <!-- Próximos Jogos -->
-    <div class="card">
-      <h2>Próximos Jogos</h2>
-      <ul>
-        <li>Time A vs Time D - 10/08/2025</li>
-        <li>Time B vs Time C - 12/08/2025</li>
-        <li>Time E vs Time F - 15/08/2025</li>
-      </ul>
+    <h2>Próximos Jogos</h2>
+    <div class="match">
+      <div class="teams">
+        <span>Time C</span>
+        <span>Time D</span>
+      </div>
+      <div>20:00</div>
+    </div>
+    <div class="match">
+      <div class="teams">
+        <span>Time E</span>
+        <span>Time F</span>
+      </div>
+      <div>22:30</div>
     </div>
 
-    <!-- Resultados Recentes -->
-    <div class="card">
-      <h2>Resultados Recentes</h2>
-      <ul>
-        <li>Time A 3 x 1 Time C</li>
-        <li>Time B 2 x 2 Time D</li>
-        <li>Time E 0 x 1 Time F</li>
-      </ul>
+    <h2>Resultados Recentes</h2>
+    <div class="match">
+      <div class="teams">
+        <span>Time G</span>
+        <span>Time H</span>
+      </div>
+      <div class="score">3 - 0</div>
     </div>
-
-    <!-- Galeria de Imagens -->
-    <div class="card">
-      <h2>Galeria</h2>
-      <img src="https://source.unsplash.com/300x200/?football" alt="futebol" style="width:100%; border-radius:8px; margin-bottom:10px;">
-      <img src="https://source.unsplash.com/300x200/?basketball" alt="basquete" style="width:100%; border-radius:8px; margin-bottom:10px;">
-      <img src="https://source.unsplash.com/300x200/?soccer" alt="soccer" style="width:100%; border-radius:8px;">
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 SportsHub - Todos os direitos reservados</p>
-  </footer>
+  </main>
+  <footer>&copy; 2025 FlashScore Clone - Todos os direitos reservados</footer>
 </body>
 </html>
