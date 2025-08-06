@@ -1,386 +1,82 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esportes ao Vivo - Tudo sobre o mundo esportivo</title>
+    <title>Site Esportivo</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
-        
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
         header {
-            background-color: #1a1a2e;
+            background: #1a1a2e;
             color: white;
-            padding: 1rem;
+            padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #e94560;
         }
-        
-        nav {
-            background-color: #16213e;
-            padding: 0.5rem;
-        }
-        
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin: 0 1rem;
-        }
-        
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 0.5rem;
-            transition: all 0.3s;
-        }
-        
-        nav ul li a:hover {
-            color: #e94560;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .destaque {
-            background-color: #e94560;
-            color: white;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            border-radius: 5px;
-        }
-        
-        .tabela-classificacao, .programacao-jogos {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        
-        .tabela-classificacao h2, .programacao-jogos h2 {
-            background-color: #1a1a2e;
-            color: white;
-            padding: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        table {
-            width: 100%;
+        .tabela {
+            width: 90%;
+            margin: 20px auto;
             border-collapse: collapse;
         }
-        
-        th, td {
-            padding: 0.8rem;
+        .tabela th, .tabela td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
-        
-        th {
-            background-color: #16213e;
+        .tabela th {
+            background: #16213e;
             color: white;
         }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .jogos {
+            width: 90%;
+            margin: 20px auto;
         }
-        
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        
-        .posicao {
-            font-weight: bold;
-            text-align: center;
-            width: 40px;
-        }
-        
-        .time {
-            display: flex;
-            align-items: center;
-        }
-        
-        .escudo {
-            width: 25px;
-            height: 25px;
-            margin-right: 10px;
-        }
-        
         .jogo {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .jogo:last-child {
-            border-bottom: none;
-        }
-        
-        .times {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
-        .time-casa, .time-visitante {
-            display: flex;
-            align-items: center;
-            width: 40%;
-        }
-        
-        .time-visitante {
-            justify-content: flex-end;
-        }
-        
-        .placar {
-            font-weight: bold;
-            margin: 0 1rem;
-            min-width: 50px;
-            text-align: center;
-        }
-        
-        .data-hora {
-            color: #666;
-            font-size: 0.9rem;
-            margin-left: 1rem;
-        }
-        
-        footer {
-            background-color: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            nav ul li {
-                margin: 0.3rem 0;
-            }
-            
-            .times {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .time-casa, .time-visitante {
-                width: 100%;
-                margin: 0.3rem 0;
-            }
-            
-            .placar {
-                margin: 0.5rem 0;
-            }
+            padding: 10px;
+            border-bottom: 1px solid #eee;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>ESPORTES AO VIVO</h1>
-        <p>Tudo sobre o mundo esportivo</p>
     </header>
-    
-    <nav>
-        <ul>
-            <li><a href="#">Futebol</a></li>
-            <li><a href="#">Basquete</a></li>
-            <li><a href="#">Tênis</a></li>
-            <li><a href="#">Vôlei</a></li>
-            <li><a href="#">Fórmula 1</a></li>
-            <li><a href="#">Notícias</a></li>
-        </ul>
-    </nav>
-    
-    <div class="container">
-        <div class="destaque">
-            <h2>JOGO DO DIA: Flamengo x Palmeiras - Final da Libertadores</h2>
-            <p>Transmissão ao vivo às 21:00 no Esportes ao Vivo e nos nossos parceiros</p>
+
+    <table class="tabela">
+        <tr>
+            <th>Posição</th>
+            <th>Time</th>
+            <th>Pontos</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Palmeiras</td>
+            <td>62</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Flamengo</td>
+            <td>58</td>
+        </tr>
+    </table>
+
+    <div class="jogos">
+        <h2>Próximos Jogos</h2>
+        <div class="jogo">
+            <span>Flamengo</span>
+            <span>vs</span>
+            <span>Palmeiras</span>
+            <span>10/11 - 21:00</span>
         </div>
-        
-        <div class="tabela-classificacao">
-            <h2>CAMPEONATO BRASILEIRO - SÉRIE A</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="posicao">#</th>
-                        <th>Time</th>
-                        <th>Pts</th>
-                        <th>PJ</th>
-                        <th>V</th>
-                        <th>E</th>
-                        <th>D</th>
-                        <th>GP</th>
-                        <th>GC</th>
-                        <th>SG</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="posicao">1</td>
-                        <td><div class="time"><img src="https://via.placeholder.com/25" alt="Escudo" class="escudo"> Palmeiras</div></td>
-                        <td>62</td>
-                        <td>30</td>
-                        <td>19</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>48</td>
-                        <td>22</td>
-                        <td>+26</td>
-                    </tr>
-                    <tr>
-                        <td class="posicao">2</td>
-                        <td><div class="time"><img src="https://via.placeholder.com/25" alt="Escudo" class="escudo"> Flamengo</div></td>
-                        <td>58</td>
-                        <td>30</td>
-                        <td>17</td>
-                        <td>7</td>
-                        <td>6</td>
-                        <td>52</td>
-                        <td>28</td>
-                        <td>+24</td>
-                    </tr>
-                    <tr>
-                        <td class="posicao">3</td>
-                        <td><div class="time"><img src="https://via.placeholder.com/25" alt="Escudo" class="escudo"> Internacional</div></td>
-                        <td>55</td>
-                        <td>30</td>
-                        <td>15</td>
-                        <td>10</td>
-                        <td>5</td>
-                        <td>44</td>
-                        <td>27</td>
-                        <td>+17</td>
-                    </tr>
-                    <tr>
-                        <td class="posicao">4</td>
-                        <td><div class="time"><img src="https://via.placeholder.com/25" alt="Escudo" class="escudo"> Corinthians</div></td>
-                        <td>50</td>
-                        <td>30</td>
-                        <td>14</td>
-                        <td>8</td>
-                        <td>8</td>
-                        <td>38</td>
-                        <td>30</td>
-                        <td>+8</td>
-                    </tr>
-                    <tr>
-                        <td class="posicao">5</td>
-                        <td><div class="time"><img src="https://via.placeholder.com/25" alt="Escudo" class="escudo"> Fluminense</div></td>
-                        <td>48</td>
-                        <td>30</td>
-                        <td>13</td>
-                        <td>9</td>
-                        <td>8</td>
-                        <td>42</td>
-                        <td>35</td>
-                        <td>+7</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="programacao-jogos">
-            <h2>PRÓXIMOS JOGOS</h2>
-            <div class="jogo">
-                <div class="times">
-                    <div class="time-casa">
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                        <span>Flamengo</span>
-                    </div>
-                    <div class="placar">-</div>
-                    <div class="time-visitante">
-                        <span>Palmeiras</span>
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                    </div>
-                </div>
-                <div class="data-hora">
-                    21:00 - 10/11/2023<br>
-                    Maracanã - RJ
-                </div>
-            </div>
-            
-            <div class="jogo">
-                <div class="times">
-                    <div class="time-casa">
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                        <span>Corinthians</span>
-                    </div>
-                    <div class="placar">-</div>
-                    <div class="time-visitante">
-                        <span>Internacional</span>
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                    </div>
-                </div>
-                <div class="data-hora">
-                    16:00 - 11/11/2023<br>
-                    Neo Química Arena - SP
-                </div>
-            </div>
-            
-            <div class="jogo">
-                <div class="times">
-                    <div class="time-casa">
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                        <span>São Paulo</span>
-                    </div>
-                    <div class="placar">-</div>
-                    <div class="time-visitante">
-                        <span>Fluminense</span>
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                    </div>
-                </div>
-                <div class="data-hora">
-                    18:30 - 11/11/2023<br>
-                    Morumbi - SP
-                </div>
-            </div>
-            
-            <div class="jogo">
-                <div class="times">
-                    <div class="time-casa">
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                        <span>Atlético-MG</span>
-                    </div>
-                    <div class="placar">-</div>
-                    <div class="time-visitante">
-                        <span>Botafogo</span>
-                        <img src="https://via.placeholder.com/25" alt="Escudo" class="escudo">
-                    </div>
-                </div>
-                <div class="data-hora">
-                    16:00 - 12/11/2023<br>
-                    Mineirão - MG
-                </div>
-            </div>
+        <div class="jogo">
+            <span>Corinthians</span>
+            <span>vs</span>
+            <span>Internacional</span>
+            <span>11/11 - 16:00</span>
         </div>
     </div>
-    
-    <footer>
-        <p>© 2023 Esportes ao Vivo - Todos os direitos reservados</p>
-        <p>contato@esportesaovivo.com.br | (21) 1234-5678</p>
-    </footer>
 </body>
 </html>
