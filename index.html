@@ -1222,7 +1222,1112 @@
             
             // Atualizar placares a cada 5 segundos
             setInterval(updateScores, 5000);
+        });<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportScore - Resultados Esportivos em Tempo Real</title>
+    <style>
+        /* Estilos anteriores mantidos */
+        
+        /* Novos estilos para o painel de admin */
+        .admin-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .admin-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .admin-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #1a3151;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .editable {
+            position: relative;
+        }
+        
+        .editable:hover {
+            outline: 2px dashed #1a3151;
+        }
+        
+        .edit-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #1a3151;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .editable:hover .edit-btn {
+            display: block;
+        }
+        
+        .admin-login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* Indicador de modo de edição */
+        .edit-mode-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #e74c3c;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            z-index: 999;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Indicador de modo de edição (inicialmente oculto) -->
+    <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;">
+        MODO DE EDIÇÃO ATIVADO - Você está logado como administrador
+    </div>
+
+    <header>
+        <div class="logo">SPORTSCORE</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-tab="home">Home</a></li>
+                <li><a href="#" data-tab="tables">Tabelas</a></li>
+                <li><a href="#">Ao Vivo</a></li>
+                <li><a href="#">Estatísticas</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <button class="login" id="userLoginBtn">Entrar</button>
+            <button class="register">Registrar</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Conteúdo da aba Home -->
+        <div id="home" class="content-tab active">
+            <!-- Destaques -->
+            <section class="highlights">
+                <h2 class="editable">Destaques <button class="edit-btn" data-edit="highlights-title">✏️</button></h2>
+                <div class="news-grid" id="highlights-container">
+                    <!-- Conteúdo dinâmico será inserido aqui -->
+                </div>
+            </section>
+
+            <!-- Melhores Partidas -->
+            <section class="best-matches">
+                <h2 class="editable">Melhores Partidas da Rodada <button class="edit-btn" data-edit="best-matches-title">✏️</button></h2>
+                <div class="match-list" id="best-matches-container">
+                    <!-- Conteúdo dinâmico será inserido aqui -->
+                </div>
+            </section>
+
+            <!-- Artilheiros -->
+            <section class="top-scorers-section">
+                <h2 class="editable">Artilheiros por Divisão <button class="edit-btn" data-edit="top-scorers-title">✏️</button></h2>
+                <div class="top-scorers" id="top-scorers-container">
+                    <!-- Conteúdo dinâmico será inserido aqui -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Conteúdo da aba Tabelas -->
+        <div id="tables" class="content-tab">
+            <!-- Abas para selecionar a divisão -->
+            <div class="division-tabs">
+                <button class="division-tab active" data-division="division1">Divisão 1</button>
+                <button class="division-tab" data-division="division2">Divisão 2</button>
+                <button class="division-tab" data-division="division3">Divisão 3</button>
+            </div>
+            
+            <!-- Tabela Divisão 1 -->
+            <div id="division1" class="division-content active">
+                <section class="league-table">
+                    <h2 class="editable">Classificação - Divisão 1 <button class="edit-btn" data-edit="division1-title">✏️</button></h2>
+                    <div id="division1-table-container">
+                        <!-- Tabela será inserida aqui dinamicamente -->
+                    </div>
+                </section>
+
+                <!-- Próximos Jogos Divisão 1 -->
+                <section class="upcoming-matches">
+                    <h2 class="editable">Próximos Jogos - Divisão 1 <button class="edit-btn" data-edit="division1-matches-title">✏️</button></h2>
+                    <div class="match-list" id="division1-matches-container">
+                        <!-- Jogos serão inseridos aqui dinamicamente -->
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Tabela Divisão 2 -->
+            <div id="division2" class="division-content">
+                <section class="league-table">
+                    <h2 class="editable">Classificação - Divisão 2 <button class="edit-btn" data-edit="division2-title">✏️</button></h2>
+                    <div id="division2-table-container">
+                        <!-- Tabela será inserida aqui dinamicamente -->
+                    </div>
+                </section>
+
+                <!-- Próximos Jogos Divisão 2 -->
+                <section class="upcoming-matches">
+                    <h2 class="editable">Próximos Jogos - Divisão 2 <button class="edit-btn" data-edit="division2-matches-title">✏️</button></h2>
+                    <div class="match-list" id="division2-matches-container">
+                        <!-- Jogos serão inseridos aqui dinamicamente -->
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Tabela Divisão 3 -->
+            <div id="division3" class="division-content">
+                <section class="league-table">
+                    <h2 class="editable">Classificação - Divisão 3 <button class="edit-btn" data-edit="division3-title">✏️</button></h2>
+                    <div id="division3-table-container">
+                        <!-- Tabela será inserida aqui dinamicamente -->
+                    </div>
+                </section>
+
+                <!-- Próximos Jogos Divisão 3 -->
+                <section class="upcoming-matches">
+                    <h2 class="editable">Próximos Jogos - Divisão 3 <button class="edit-btn" data-edit="division3-matches-title">✏️</button></h2>
+                    <div class="match-list" id="division3-matches-container">
+                        <!-- Jogos serão inseridos aqui dinamicamente -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="editable">Competições <button class="edit-btn" data-edit="footer-competitions-title">✏️</button></h3>
+                <ul id="footer-competitions-list">
+                    <!-- Itens serão inseridos aqui dinamicamente -->
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="editable">Recursos <button class="edit-btn" data-edit="footer-resources-title">✏️</button></h3>
+                <ul id="footer-resources-list">
+                    <!-- Itens serão inseridos aqui dinamicamente -->
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="editable">Sobre <button class="edit-btn" data-edit="footer-about-title">✏️</button></h3>
+                <ul id="footer-about-list">
+                    <!-- Itens serão inseridos aqui dinamicamente -->
+                </ul>
+            </div>
+        </div>
+        <div class="copyright editable">
+            &copy; <span id="copyright-year">2023</span> SportScore. Todos os direitos reservados. <button class="edit-btn" data-edit="copyright-text">✏️</button>
+        </div>
+    </footer>
+
+    <!-- Painel de Admin flutuante -->
+    <div class="admin-panel">
+        <button class="admin-btn" id="adminBtn">Admin</button>
+    </div>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login de Administrador</h2>
+            <form id="adminLoginForm" class="admin-login-form">
+                <div class="form-group">
+                    <label for="adminUsername">Usuário:</label>
+                    <input type="text" id="adminUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Senha:</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelLogin">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Edição Genérico -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="editModalTitle">Editar Conteúdo</h2>
+            <form id="editForm">
+                <div class="form-group" id="editFormFields">
+                    <!-- Campos serão inseridos dinamicamente aqui -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados iniciais do site
+        const siteData = {
+            highlights: [
+                {
+                    id: 1,
+                    image: "https://via.placeholder.com/600x400?text=Jogo+Destacado",
+                    title: "Flamengo vence clássico contra Palmeiras com gol nos acréscimos",
+                    meta: "Campeonato Brasileiro - 15/10/2023",
+                    excerpt: "Em jogo emocionante no Maracanã, Flamengo vira o placar nos minutos finais e mantém pressão na liderança."
+                },
+                {
+                    id: 2,
+                    image: "https://via.placeholder.com/600x400?text=Entrevista",
+                    title: "Técnico do Botafogo comemora liderança: 'Time está maduro'",
+                    meta: "Entrevista Exclusiva - 14/10/2023",
+                    excerpt: "Em entrevista ao SportScore, técnico analisa a campanha surpreendente do time no campeonato."
+                },
+                {
+                    id: 3,
+                    image: "https://via.placeholder.com/600x400?text=Analise",
+                    title: "Análise: O que explica o bom momento do Athletico-PR?",
+                    meta: "Análise Técnica - 13/10/2023",
+                    excerpt: "Especialistas apontam as mudanças táticas que colocaram o time paranaense na briga pelo G4."
+                }
+            ],
+            bestMatches: [
+                {
+                    id: 1,
+                    homeTeam: "Flamengo",
+                    homeLogo: "https://via.placeholder.com/24x24?text=FLA",
+                    awayTeam: "Palmeiras",
+                    awayLogo: "https://via.placeholder.com/24x24?text=PAL",
+                    homeScore: 2,
+                    awayScore: 1
+                },
+                {
+                    id: 2,
+                    homeTeam: "São Paulo",
+                    homeLogo: "https://via.placeholder.com/24x24?text=SAO",
+                    awayTeam: "Atlético-MG",
+                    awayLogo: "https://via.placeholder.com/24x24?text=ATM",
+                    homeScore: 3,
+                    awayScore: 3
+                }
+            ],
+            topScorers: [
+                {
+                    id: 1,
+                    name: "Gabriel Barbosa",
+                    photo: "https://via.placeholder.com/100x100?text=Foto",
+                    team: "Flamengo",
+                    teamLogo: "https://via.placeholder.com/16x16?text=FLA",
+                    goals: 15
+                },
+                {
+                    id: 2,
+                    name: "Rodrigo Muniz",
+                    photo: "https://via.placeholder.com/100x100?text=Foto",
+                    team: "Cruzeiro",
+                    teamLogo: "https://via.placeholder.com/16x16?text=CRU",
+                    goals: 12
+                },
+                {
+                    id: 3,
+                    name: "Rafael Costa",
+                    photo: "https://via.placeholder.com/100x100?text=Foto",
+                    team: "CRB",
+                    teamLogo: "https://via.placeholder.com/16x16?text=CRB",
+                    goals: 10
+                }
+            ],
+            divisions: {
+                division1: {
+                    teams: [
+                        { id: 1, name: "Botafogo", logo: "https://via.placeholder.com/20x20?text=BOT", points: 48, played: 22, wins: 15, draws: 3, losses: 4, goalsFor: 32, goalsAgainst: 14, form: "VVEDV" },
+                        { id: 2, name: "Palmeiras", logo: "https://via.placeholder.com/20x20?text=PAL", points: 41, played: 22, wins: 12, draws: 5, losses: 5, goalsFor: 35, goalsAgainst: 19, form: "VVEVD" },
+                        { id: 3, name: "Flamengo", logo: "https://via.placeholder.com/20x20?text=FLA", points: 40, played: 22, wins: 12, draws: 4, losses: 6, goalsFor: 36, goalsAgainst: 26, form: "VVEDV" },
+                        { id: 4, name: "Grêmio", logo: "https://via.placeholder.com/20x20?text=GRE", points: 38, played: 21, wins: 11, draws: 5, losses: 5, goalsFor: 30, goalsAgainst: 22, form: "VEDVD" },
+                        { id: 5, name: "Fluminense", logo: "https://via.placeholder.com/20x20?text=FLU", points: 37, played: 22, wins: 11, draws: 4, losses: 7, goalsFor: 28, goalsAgainst: 22, form: "VEVDD" }
+                    ],
+                    upcomingMatches: [
+                        { id: 1, homeTeam: "Botafogo", homeLogo: "https://via.placeholder.com/24x24?text=BOT", awayTeam: "Fluminense", awayLogo: "https://via.placeholder.com/24x24?text=FLU", time: "20:00", odds: "2.30 | 3.25 | 3.10" },
+                        { id: 2, homeTeam: "Cruzeiro", homeLogo: "https://via.placeholder.com/24x24?text=CRU", awayTeam: "Grêmio", awayLogo: "https://via.placeholder.com/24x24?text=GRE", time: "21:30", odds: "2.70 | 3.10 | 2.60" }
+                    ]
+                },
+                division2: {
+                    teams: [
+                        { id: 1, name: "Vitória", logo: "https://via.placeholder.com/20x20?text=VIT", points: 45, played: 22, wins: 13, draws: 6, losses: 3, goalsFor: 35, goalsAgainst: 18, form: "VVVVE" },
+                        { id: 2, name: "Cruzeiro", logo: "https://via.placeholder.com/20x20?text=CRU", points: 43, played: 22, wins: 13, draws: 4, losses: 5, goalsFor: 32, goalsAgainst: 20, form: "VVEVD" },
+                        { id: 3, name: "Bahia", logo: "https://via.placeholder.com/20x20?text=BHA", points: 41, played: 22, wins: 12, draws: 5, losses: 5, goalsFor: 34, goalsAgainst: 21, form: "VEVDD" },
+                        { id: 4, name: "Sport", logo: "https://via.placeholder.com/20x20?text=SPO", points: 38, played: 22, wins: 11, draws: 5, losses: 6, goalsFor: 30, goalsAgainst: 22, form: "VEDVD" },
+                        { id: 5, name: "América-MG", logo: "https://via.placeholder.com/20x20?text=AME", points: 36, played: 22, wins: 10, draws: 6, losses: 6, goalsFor: 28, goalsAgainst: 23, form: "VEVVE" }
+                    ],
+                    upcomingMatches: [
+                        { id: 1, homeTeam: "Vitória", homeLogo: "https://via.placeholder.com/24x24?text=VIT", awayTeam: "Cruzeiro", awayLogo: "https://via.placeholder.com/24x24?text=CRU", time: "19:30", odds: "2.10 | 3.20 | 3.40" },
+                        { id: 2, homeTeam: "Bahia", homeLogo: "https://via.placeholder.com/24x24?text=BHA", awayTeam: "Sport", awayLogo: "https://via.placeholder.com/24x24?text=SPO", time: "21:00", odds: "1.90 | 3.30 | 3.80" }
+                    ]
+                },
+                division3: {
+                    teams: [
+                        { id: 1, name: "CRB", logo: "https://via.placeholder.com/20x20?text=CRB", points: 42, played: 21, wins: 12, draws: 6, losses: 3, goalsFor: 30, goalsAgainst: 15, form: "VVEDV" },
+                        { id: 2, name: "Sport", logo: "https://via.placeholder.com/20x20?text=SPO", points: 40, played: 21, wins: 11, draws: 7, losses: 3, goalsFor: 28, goalsAgainst: 16, form: "VEVVE" },
+                        { id: 3, name: "América-MG", logo: "https://via.placeholder.com/20x20?text=AME", points: 38, played: 21, wins: 11, draws: 5, losses: 5, goalsFor: 27, goalsAgainst: 18, form: "VEVDD" },
+                        { id: 4, name: "Avaí", logo: "https://via.placeholder.com/20x20?text=AVA", points: 36, played: 21, wins: 10, draws: 6, losses: 5, goalsFor: 25, goalsAgainst: 19, form: "VEDVD" },
+                        { id: 5, name: "Guarani", logo: "https://via.placeholder.com/20x20?text=GUA", points: 34, played: 21, wins: 9, draws: 7, losses: 5, goalsFor: 24, goalsAgainst: 20, form: "VEVVE" }
+                    ],
+                    upcomingMatches: [
+                        { id: 1, homeTeam: "CRB", homeLogo: "https://via.placeholder.com/24x24?text=CRB", awayTeam: "América-MG", awayLogo: "https://via.placeholder.com/24x24?text=AME", time: "16:00", odds: "2.40 | 3.10 | 2.90" },
+                        { id: 2, homeTeam: "Sport", homeLogo: "https://via.placeholder.com/24x24?text=SPO", awayTeam: "Avaí", awayLogo: "https://via.placeholder.com/24x24?text=AVA", time: "18:30", odds: "2.20 | 3.20 | 3.30" }
+                    ]
+                }
+            },
+            footer: {
+                competitions: ["Divisão 1", "Divisão 2", "Divisão 3", "Copa Nacional"],
+                resources: ["Ao Vivo", "Resultados", "Classificação", "Estatísticas"],
+                about: ["Contato", "Termos de Uso", "Política de Privacidade"]
+            },
+            copyright: "2023"
+        };
+
+        // Estado da aplicação
+        const appState = {
+            isAdmin: false,
+            currentEdit: null,
+            currentEditData: null
+        };
+
+        // Funções para renderizar o conteúdo
+        function renderHighlights() {
+            const container = document.getElementById('highlights-container');
+            container.innerHTML = '';
+            
+            siteData.highlights.forEach(highlight => {
+                const card = document.createElement('div');
+                card.className = 'news-card editable';
+                card.dataset.id = highlight.id;
+                card.innerHTML = `
+                    <img src="${highlight.image}" alt="Destaque">
+                    <div class="news-content">
+                        <div class="news-title editable">${highlight.title} <button class="edit-btn" data-edit="highlight-title-${highlight.id}">✏️</button></div>
+                        <div class="news-meta editable">${highlight.meta} <button class="edit-btn" data-edit="highlight-meta-${highlight.id}">✏️</button></div>
+                        <div class="news-excerpt editable">${highlight.excerpt} <button class="edit-btn" data-edit="highlight-excerpt-${highlight.id}">✏️</button></div>
+                    </div>
+                    ${appState.isAdmin ? `<button class="btn btn-secondary" style="margin: 10px;" onclick="deleteHighlight(${highlight.id})">Excluir</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+            
+            if (appState.isAdmin) {
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.textContent = 'Adicionar Destaque';
+                addButton.style.marginTop = '20px';
+                addButton.onclick = () => showAddHighlightForm();
+                container.appendChild(addButton);
+            }
+        }
+
+        function renderBestMatches() {
+            const container = document.getElementById('best-matches-container');
+            container.innerHTML = '';
+            
+            siteData.bestMatches.forEach(match => {
+                const matchElement = document.createElement('div');
+                matchElement.className = 'match editable';
+                matchElement.dataset.id = match.id;
+                matchElement.innerHTML = `
+                    <div class="teams">
+                        <div class="team home-team">
+                            <img src="${match.homeLogo}" alt="${match.homeTeam}">
+                            <span class="editable">${match.homeTeam} <button class="edit-btn" data-edit="best-match-home-${match.id}">✏️</button></span>
+                        </div>
+                        <div class="score">
+                            <span class="home-score editable">${match.homeScore} <button class="edit-btn" data-edit="best-match-home-score-${match.id}">✏️</button></span>
+                            <span>-</span>
+                            <span class="away-score editable">${match.awayScore} <button class="edit-btn" data-edit="best-match-away-score-${match.id}">✏️</button></span>
+                        </div>
+                        <div class="team away-team">
+                            <span class="editable">${match.awayTeam} <button class="edit-btn" data-edit="best-match-away-${match.id}">✏️</button></span>
+                            <img src="${match.awayLogo}" alt="${match.awayTeam}">
+                        </div>
+                    </div>
+                    ${appState.isAdmin ? `<button class="btn btn-secondary" style="margin-left: 10px;" onclick="deleteBestMatch(${match.id})">Excluir</button>` : ''}
+                `;
+                container.appendChild(matchElement);
+            });
+            
+            if (appState.isAdmin) {
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.textContent = 'Adicionar Partida';
+                addButton.style.marginTop = '20px';
+                addButton.onclick = () => showAddBestMatchForm();
+                container.appendChild(addButton);
+            }
+        }
+
+        function renderTopScorers() {
+            const container = document.getElementById('top-scorers-container');
+            container.innerHTML = '';
+            
+            siteData.topScorers.forEach(scorer => {
+                const card = document.createElement('div');
+                card.className = 'scorer-card editable';
+                card.dataset.id = scorer.id;
+                card.innerHTML = `
+                    <img src="${scorer.photo}" alt="${scorer.name}" class="scorer-photo">
+                    <div class="scorer-info">
+                        <div class="scorer-name editable">${scorer.name} <button class="edit-btn" data-edit="scorer-name-${scorer.id}">✏️</button></div>
+                        <div class="scorer-team">
+                            <img src="${scorer.teamLogo}" alt="${scorer.team}">
+                            <span class="editable">${scorer.team} <button class="edit-btn" data-edit="scorer-team-${scorer.id}">✏️</button></span>
+                        </div>
+                    </div>
+                    <div class="scorer-goals editable">${scorer.goals} <button class="edit-btn" data-edit="scorer-goals-${scorer.id}">✏️</button></div>
+                    ${appState.isAdmin ? `<button class="btn btn-secondary" style="margin-left: 10px;" onclick="deleteTopScorer(${scorer.id})">Excluir</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+            
+            if (appState.isAdmin) {
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.textContent = 'Adicionar Artilheiro';
+                addButton.style.marginTop = '20px';
+                addButton.onclick = () => showAddTopScorerForm();
+                container.appendChild(addButton);
+            }
+        }
+
+        function renderDivisionTable(divisionId) {
+            const container = document.getElementById(`${divisionId}-table-container`);
+            const division = siteData.divisions[divisionId];
+            
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Time</th>
+                            <th>Pts</th>
+                            <th>J</th>
+                            <th>V</th>
+                            <th>E</th>
+                            <th>D</th>
+                            <th>GP</th>
+                            <th>GC</th>
+                            <th>SG</th>
+                            <th>Últ. 5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            division.teams.forEach((team, index) => {
+                tableHTML += `
+                    <tr class="editable" data-id="${team.id}">
+                        <td>${index + 1}</td>
+                        <td>
+                            <div class="team-cell">
+                                <img src="${team.logo}" alt="${team.name}" class="team-logo">
+                                <span class="editable">${team.name} <button class="edit-btn" data-edit="team-name-${divisionId}-${team.id}">✏️</button></span>
+                            </div>
+                        </td>
+                        <td class="editable">${team.points} <button class="edit-btn" data-edit="team-points-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.played} <button class="edit-btn" data-edit="team-played-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.wins} <button class="edit-btn" data-edit="team-wins-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.draws} <button class="edit-btn" data-edit="team-draws-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.losses} <button class="edit-btn" data-edit="team-losses-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.goalsFor} <button class="edit-btn" data-edit="team-gf-${divisionId}-${team.id}">✏️</button></td>
+                        <td class="editable">${team.goalsAgainst} <button class="edit-btn" data-edit="team-ga-${divisionId}-${team.id}">✏️</button></td>
+                        <td>${team.goalsFor - team.goalsAgainst}</td>
+                        <td style="color: ${team.form.includes('D') ? 'orange' : 'green'}">${team.form}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+            
+            if (appState.isAdmin) {
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.textContent = 'Adicionar Time';
+                addButton.style.marginTop = '20px';
+                addButton.onclick = () => showAddTeamForm(divisionId);
+                container.appendChild(addButton);
+            }
+        }
+
+        function renderUpcomingMatches(divisionId) {
+            const container = document.getElementById(`${divisionId}-matches-container`);
+            const matches = siteData.divisions[divisionId].upcomingMatches;
+            
+            container.innerHTML = '';
+            
+            matches.forEach(match => {
+                const matchElement = document.createElement('div');
+                matchElement.className = 'match editable';
+                matchElement.dataset.id = match.id;
+                matchElement.innerHTML = `
+                    <div class="match-time editable">${match.time} <button class="edit-btn" data-edit="match-time-${divisionId}-${match.id}">✏️</button></div>
+                    <div class="teams">
+                        <div class="team home-team">
+                            <img src="${match.homeLogo}" alt="${match.homeTeam}">
+                            <span class="editable">${match.homeTeam} <button class="edit-btn" data-edit="match-home-${divisionId}-${match.id}">✏️</button></span>
+                        </div>
+                        <div class="score">
+                            <span>-</span>
+                        </div>
+                        <div class="team away-team">
+                            <span class="editable">${match.awayTeam} <button class="edit-btn" data-edit="match-away-${divisionId}-${match.id}">✏️</button></span>
+                            <img src="${match.awayLogo}" alt="${match.awayTeam}">
+                        </div>
+                    </div>
+                    <div class="match-actions">
+                        <button class="stats">Detalhes</button>
+                        <button class="odds editable">${match.odds} <button class="edit-btn" data-edit="match-odds-${divisionId}-${match.id}">✏️</button></button>
+                    </div>
+                    ${appState.isAdmin ? `<button class="btn btn-secondary" style="margin-left: 10px;" onclick="deleteUpcomingMatch('${divisionId}', ${match.id})">Excluir</button>` : ''}
+                `;
+                container.appendChild(matchElement);
+            });
+            
+            if (appState.isAdmin) {
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.textContent = 'Adicionar Jogo';
+                addButton.style.marginTop = '20px';
+                addButton.onclick = () => showAddUpcomingMatchForm(divisionId);
+                container.appendChild(addButton);
+            }
+        }
+
+        function renderFooter() {
+            // Competições
+            const competitionsList = document.getElementById('footer-competitions-list');
+            competitionsList.innerHTML = '';
+            siteData.footer.competitions.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'editable';
+                li.innerHTML = `
+                    <span>${item}</span>
+                    ${appState.isAdmin ? `<button class="edit-btn" data-edit="footer-competition-${index}">✏️</button>` : ''}
+                `;
+                competitionsList.appendChild(li);
+            });
+            
+            // Recursos
+            const resourcesList = document.getElementById('footer-resources-list');
+            resourcesList.innerHTML = '';
+            siteData.footer.resources.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'editable';
+                li.innerHTML = `
+                    <span>${item}</span>
+                    ${appState.isAdmin ? `<button class="edit-btn" data-edit="footer-resource-${index}">✏️</button>` : ''}
+                `;
+                resourcesList.appendChild(li);
+            });
+            
+            // Sobre
+            const aboutList = document.getElementById('footer-about-list');
+            aboutList.innerHTML = '';
+            siteData.footer.about.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'editable';
+                li.innerHTML = `
+                    <span>${item}</span>
+                    ${appState.isAdmin ? `<button class="edit-btn" data-edit="footer-about-${index}">✏️</button>` : ''}
+                `;
+                aboutList.appendChild(li);
+            });
+            
+            // Copyright
+            document.getElementById('copyright-year').textContent = siteData.copyright;
+        }
+
+        // Funções para o painel de admin
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function showEditModal(title, fields, saveCallback) {
+            const fieldsContainer = document.getElementById('editFormFields');
+            fieldsContainer.innerHTML = '';
+            
+            document.getElementById('editModalTitle').textContent = title;
+            
+            fields.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                
+                const label = document.createElement('label');
+                label.textContent = field.label;
+                label.htmlFor = field.id;
+                
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.rows = 4;
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                }
+                
+                input.id = field.id;
+                input.value = field.value || '';
+                input.className = 'form-control';
+                
+                group.appendChild(label);
+                group.appendChild(input);
+                fieldsContainer.appendChild(group);
+            });
+            
+            // Configurar o submit do formulário
+            const form = document.getElementById('editForm');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const formData = {};
+                fields.forEach(field => {
+                    formData[field.id] = document.getElementById(field.id).value;
+                });
+                
+                saveCallback(formData);
+                hideEditModal();
+            };
+            
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function hideEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function setupEditButtons() {
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const editTarget = this.dataset.edit;
+                    handleEditClick(editTarget);
+                });
+            });
+        }
+
+        function handleEditClick(editTarget) {
+            // Implementar lógica para cada tipo de edição
+            if (editTarget.startsWith('highlight-title-')) {
+                const id = parseInt(editTarget.split('-')[2]);
+                const highlight = siteData.highlights.find(h => h.id === id);
+                showEditModal('Editar Título do Destaque', [
+                    { id: 'title', label: 'Título', value: highlight.title }
+                ], (data) => {
+                    highlight.title = data.title;
+                    renderHighlights();
+                });
+            }
+            // Implementar outros casos de edição...
+            else if (editTarget === 'copyright-text') {
+                showEditModal('Editar Texto de Copyright', [
+                    { id: 'year', label: 'Ano', value: siteData.copyright }
+                ], (data) => {
+                    siteData.copyright = data.year;
+                    renderFooter();
+                });
+            }
+            // Adicionar mais casos conforme necessário
+        }
+
+        // Funções para adicionar novos itens
+        function showAddHighlightForm() {
+            showEditModal('Adicionar Novo Destaque', [
+                { id: 'image', label: 'URL da Imagem', value: 'https://via.placeholder.com/600x400?text=Novo+Destaque' },
+                { id: 'title', label: 'Título', value: '' },
+                { id: 'meta', label: 'Metadados', value: '' },
+                { id: 'excerpt', label: 'Resumo', type: 'textarea', value: '' }
+            ], (data) => {
+                const newId = Math.max(...siteData.highlights.map(h => h.id), 0) + 1;
+                siteData.highlights.push({
+                    id: newId,
+                    image: data.image,
+                    title: data.title,
+                    meta: data.meta,
+                    excerpt: data.excerpt
+                });
+                renderHighlights();
+            });
+        }
+
+        function showAddBestMatchForm() {
+            showEditModal('Adicionar Nova Partida', [
+                { id: 'homeTeam', label: 'Time da Casa', value: '' },
+                { id: 'homeLogo', label: 'URL do Logo (Casa)', value: 'https://via.placeholder.com/24x24?text=TimeA' },
+                { id: 'awayTeam', label: 'Time Visitante', value: '' },
+                { id: 'awayLogo', label: 'URL do Logo (Visitante)', value: 'https://via.placeholder.com/24x24?text=TimeB' },
+                { id: 'homeScore', label: 'Placar (Casa)', value: '0' },
+                { id: 'awayScore', label: 'Placar (Visitante)', value: '0' }
+            ], (data) => {
+                const newId = Math.max(...siteData.bestMatches.map(m => m.id), 0) + 1;
+                siteData.bestMatches.push({
+                    id: newId,
+                    homeTeam: data.homeTeam,
+                    homeLogo: data.homeLogo,
+                    awayTeam: data.awayTeam,
+                    awayLogo: data.awayLogo,
+                    homeScore: parseInt(data.homeScore),
+                    awayScore: parseInt(data.awayScore)
+                });
+                renderBestMatches();
+            });
+        }
+
+        function showAddTopScorerForm() {
+            showEditModal('Adicionar Novo Artilheiro', [
+                { id: 'name', label: 'Nome do Jogador', value: '' },
+                { id: 'photo', label: 'URL da Foto', value: 'https://via.placeholder.com/100x100?text=Jogador' },
+                { id: 'team', label: 'Time', value: '' },
+                { id: 'teamLogo', label: 'URL do Logo do Time', value: 'https://via.placeholder.com/16x16?text=Time' },
+                { id: 'goals', label: 'Gols', value: '0' }
+            ], (data) => {
+                const newId = Math.max(...siteData.topScorers.map(s => s.id), 0) + 1;
+                siteData.topScorers.push({
+                    id: newId,
+                    name: data.name,
+                    photo: data.photo,
+                    team: data.team,
+                    teamLogo: data.teamLogo,
+                    goals: parseInt(data.goals)
+                });
+                renderTopScorers();
+            });
+        }
+
+        function showAddTeamForm(divisionId) {
+            showEditModal('Adicionar Novo Time', [
+                { id: 'name', label: 'Nome do Time', value: '' },
+                { id: 'logo', label: 'URL do Logo', value: 'https://via.placeholder.com/20x20?text=Time' },
+                { id: 'points', label: 'Pontos', value: '0' },
+                { id: 'played', label: 'Jogos', value: '0' },
+                { id: 'wins', label: 'Vitórias', value: '0' },
+                { id: 'draws', label: 'Empates', value: '0' },
+                { id: 'losses', label: 'Derrotas', value: '0' },
+                { id: 'goalsFor', label: 'Gols Pró', value: '0' },
+                { id: 'goalsAgainst', label: 'Gols Contra', value: '0' },
+                { id: 'form', label: 'Últimos 5 jogos (V=Vitória, E=Empate, D=Derrota)', value: 'VVVVV' }
+            ], (data) => {
+                const newId = Math.max(...siteData.divisions[divisionId].teams.map(t => t.id), 0) + 1;
+                siteData.divisions[divisionId].teams.push({
+                    id: newId,
+                    name: data.name,
+                    logo: data.logo,
+                    points: parseInt(data.points),
+                    played: parseInt(data.played),
+                    wins: parseInt(data.wins),
+                    draws: parseInt(data.draws),
+                    losses: parseInt(data.losses),
+                    goalsFor: parseInt(data.goalsFor),
+                    goalsAgainst: parseInt(data.goalsAgainst),
+                    form: data.form
+                });
+                renderDivisionTable(divisionId);
+            });
+        }
+
+        function showAddUpcomingMatchForm(divisionId) {
+            showEditModal('Adicionar Novo Jogo', [
+                { id: 'time', label: 'Horário', value: '20:00' },
+                { id: 'homeTeam', label: 'Time da Casa', value: '' },
+                { id: 'homeLogo', label: 'URL do Logo (Casa)', value: 'https://via.placeholder.com/24x24?text=TimeA' },
+                { id: 'awayTeam', label: 'Time Visitante', value: '' },
+                { id: 'awayLogo', label: 'URL do Logo (Visitante)', value: 'https://via.placeholder.com/24x24?text=TimeB' },
+                { id: 'odds', label: 'Odds (Casa | Empate | Visitante)', value: '2.00 | 3.20 | 3.50' }
+            ], (data) => {
+                const newId = Math.max(...siteData.divisions[divisionId].upcomingMatches.map(m => m.id), 0) + 1;
+                siteData.divisions[divisionId].upcomingMatches.push({
+                    id: newId,
+                    time: data.time,
+                    homeTeam: data.homeTeam,
+                    homeLogo: data.homeLogo,
+                    awayTeam: data.awayTeam,
+                    awayLogo: data.awayLogo,
+                    odds: data.odds
+                });
+                renderUpcomingMatches(divisionId);
+            });
+        }
+
+        // Funções para excluir itens
+        function deleteHighlight(id) {
+            if (confirm('Tem certeza que deseja excluir este destaque?')) {
+                siteData.highlights = siteData.highlights.filter(h => h.id !== id);
+                renderHighlights();
+            }
+        }
+
+        function deleteBestMatch(id) {
+            if (confirm('Tem certeza que deseja excluir esta partida?')) {
+                siteData.bestMatches = siteData.bestMatches.filter(m => m.id !== id);
+                renderBestMatches();
+            }
+        }
+
+        function deleteTopScorer(id) {
+            if (confirm('Tem certeza que deseja excluir este artilheiro?')) {
+                siteData.topScorers = siteData.topScorers.filter(s => s.id !== id);
+                renderTopScorers();
+            }
+        }
+
+        function deleteTeam(divisionId, id) {
+            if (confirm('Tem certeza que deseja excluir este time?')) {
+                siteData.divisions[divisionId].teams = siteData.divisions[divisionId].teams.filter(t => t.id !== id);
+                renderDivisionTable(divisionId);
+            }
+        }
+
+        function deleteUpcomingMatch(divisionId, id) {
+            if (confirm('Tem certeza que deseja excluir este jogo?')) {
+                siteData.divisions[divisionId].upcomingMatches = siteData.divisions[divisionId].upcomingMatches.filter(m => m.id !== id);
+                renderUpcomingMatches(divisionId);
+            }
+        }
+
+        // Funções para login/logout
+        function login(username, password) {
+            // Em um sistema real, isso seria validado no servidor
+            if (username === 'admin' && password === 'admin123') {
+                appState.isAdmin = true;
+                document.getElementById('editModeIndicator').style.display = 'block';
+                document.getElementById('userLoginBtn').textContent = 'Logout';
+                renderAll();
+                hideLoginModal();
+            } else {
+                alert('Credenciais inválidas!');
+            }
+        }
+
+        function logout() {
+            appState.isAdmin = false;
+            document.getElementById('editModeIndicator').style.display = 'none';
+            document.getElementById('userLoginBtn').textContent = 'Entrar';
+            renderAll();
+        }
+
+        // Função para renderizar tudo
+        function renderAll() {
+            renderHighlights();
+            renderBestMatches();
+            renderTopScorers();
+            renderDivisionTable('division1');
+            renderDivisionTable('division2');
+            renderDivisionTable('division3');
+            renderUpcomingMatches('division1');
+            renderUpcomingMatches('division2');
+            renderUpcomingMatches('division3');
+            renderFooter();
+            setupEditButtons();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Renderizar todo o conteúdo inicial
+            renderAll();
+            
+            // Configurar botão de admin
+            document.getElementById('adminBtn').addEventListener('click', function() {
+                if (appState.isAdmin) {
+                    // Mostrar menu de admin
+                    alert('Menu de admin - Aqui poderia ter mais opções');
+                } else {
+                    showLoginModal();
+                }
+            });
+            
+            // Configurar botão de login do usuário
+            document.getElementById('userLoginBtn').addEventListener('click', function() {
+                if (appState.isAdmin) {
+                    logout();
+                } else {
+                    showLoginModal();
+                }
+            });
+            
+            // Configurar formulário de login
+            document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('adminUsername').value;
+                const password = document.getElementById('adminPassword').value;
+                login(username, password);
+            });
+            
+            // Configurar botões de cancelar
+            document.getElementById('cancelLogin').addEventListener('click', hideLoginModal);
+            document.getElementById('cancelEdit').addEventListener('click', hideEditModal);
+            
+            // Configurar fechar modais
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.closest('.modal').id === 'loginModal') {
+                        hideLoginModal();
+                    } else {
+                        hideEditModal();
+                    }
+                });
+            });
+            
+            // Fechar modal ao clicar fora
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    if (e.target.id === 'loginModal') {
+                        hideLoginModal();
+                    } else {
+                        hideEditModal();
+                    }
+                }
+            });
+            
+            // Simulação de atualização de placar em tempo real
+            setInterval(function() {
+                if (Math.random() > 0.7) {
+                    const liveMatches = document.querySelectorAll('.live-matches .match');
+                    
+                    liveMatches.forEach(match => {
+                        const timeElement = match.querySelector('.match-time');
+                        const homeScoreElement = match.querySelector('.home-score');
+                        const awayScoreElement = match.querySelector('.away-score');
+                        
+                        // Incrementar tempo
+                        let currentTime = parseInt(timeElement.textContent.replace("'", "")) || 0;
+                        if (currentTime < 90) {
+                            currentTime += 1;
+                            timeElement.textContent = currentTime + "'";
+                        }
+                        
+                        // Chance aleatória de atualizar o placar
+                        if (Math.random() > 0.95 && currentTime < 90) {
+                            if (Math.random() > 0.5) {
+                                homeScoreElement.textContent = parseInt(homeScoreElement.textContent) + 1;
+                            } else {
+                                awayScoreElement.textContent = parseInt(awayScoreElement.textContent) + 1;
+                            }
+                            
+                            // Destacar mudança no placar
+                            match.style.backgroundColor = '#fffde7';
+                            setTimeout(() => {
+                                match.style.backgroundColor = '';
+                            }, 1000);
+                        }
+                    });
+                }
+            }, 5000);
         });
+
+        // Funções globais para acesso via HTML
+        window.deleteHighlight = deleteHighlight;
+        window.deleteBestMatch = deleteBestMatch;
+        window.deleteTopScorer = deleteTopScorer;
+        window.deleteUpcomingMatch = deleteUpcomingMatch;
+        window.showAddHighlightForm = showAddHighlightForm;
+        window.showAddBestMatchForm = showAddBestMatchForm;
+        window.showAddTopScorerForm = showAddTopScorerForm;
+        window.showAddTeamForm = showAddTeamForm;
+        window.showAddUpcomingMatchForm = showAddUpcomingMatchForm;
+        window.handleEditClick = handleEditClick;
     </script>
 </body>
 </html>
