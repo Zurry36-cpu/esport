@@ -189,7 +189,7 @@
       const scoreEl = document.querySelector('.live .score');
       if (scoreEl) {
         let scores = scoreEl.textContent.split(' - ').map(Number);
-        if (Math.random() > 0.7) {
+        if (Math.random() > 0.7){
           scores[Math.floor(Math.random() * 2)] += 1;
           scoreEl.textContent = `${scores[0]} - ${scores[1]}`;
         }
