@@ -1,82 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Site Esportivo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #1a1a2e;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .tabela {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        .tabela th, .tabela td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .tabela th {
-            background: #16213e;
-            color: white;
-        }
-        .jogos {
-            width: 90%;
-            margin: 20px auto;
-        }
-        .jogo {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SportsHub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #0d47a1;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: #1565c0;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .banner {
+      background: url('https://source.unsplash.com/1200x400/?sports,stadium') center/cover;
+      height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    table th {
+      background: #1976d2;
+      color: white;
+    }
+    footer {
+      background: #0d47a1;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>ESPORTES AO VIVO</h1>
-    </header>
+  <header>
+    <h1>SportsHub</h1>
+    <p>Seu portal de esportes</p>
+  </header>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#">Classificação</a>
+    <a href="#">Próximos Jogos</a>
+    <a href="#">Resultados</a>
+  </nav>
+  <section class="banner">
+    Destaques do Campeonato
+  </section>
 
-    <table class="tabela">
+  <div class="container">
+    <!-- Tabela de Classificação -->
+    <div class="card">
+      <h2>Classificação</h2>
+      <table>
         <tr>
-            <th>Posição</th>
-            <th>Time</th>
-            <th>Pontos</th>
+          <th>Posição</th>
+          <th>Time</th>
+          <th>Pontos</th>
         </tr>
         <tr>
-            <td>1</td>
-            <td>Palmeiras</td>
-            <td>62</td>
+          <td>1</td>
+          <td>Time A</td>
+          <td>45</td>
         </tr>
         <tr>
-            <td>2</td>
-            <td>Flamengo</td>
-            <td>58</td>
+          <td>2</td>
+          <td>Time B</td>
+          <td>42</td>
         </tr>
-    </table>
-
-    <div class="jogos">
-        <h2>Próximos Jogos</h2>
-        <div class="jogo">
-            <span>Flamengo</span>
-            <span>vs</span>
-            <span>Palmeiras</span>
-            <span>10/11 - 21:00</span>
-        </div>
-        <div class="jogo">
-            <span>Corinthians</span>
-            <span>vs</span>
-            <span>Internacional</span>
-            <span>11/11 - 16:00</span>
-        </div>
+        <tr>
+          <td>3</td>
+          <td>Time C</td>
+          <td>39</td>
+        </tr>
+      </table>
     </div>
+
+    <!-- Próximos Jogos -->
+    <div class="card">
+      <h2>Próximos Jogos</h2>
+      <ul>
+        <li>Time A vs Time D - 10/08/2025</li>
+        <li>Time B vs Time C - 12/08/2025</li>
+        <li>Time E vs Time F - 15/08/2025</li>
+      </ul>
+    </div>
+
+    <!-- Resultados Recentes -->
+    <div class="card">
+      <h2>Resultados Recentes</h2>
+      <ul>
+        <li>Time A 3 x 1 Time C</li>
+        <li>Time B 2 x 2 Time D</li>
+        <li>Time E 0 x 1 Time F</li>
+      </ul>
+    </div>
+
+    <!-- Galeria de Imagens -->
+    <div class="card">
+      <h2>Galeria</h2>
+      <img src="https://source.unsplash.com/300x200/?football" alt="futebol" style="width:100%; border-radius:8px; margin-bottom:10px;">
+      <img src="https://source.unsplash.com/300x200/?basketball" alt="basquete" style="width:100%; border-radius:8px; margin-bottom:10px;">
+      <img src="https://source.unsplash.com/300x200/?soccer" alt="soccer" style="width:100%; border-radius:8px;">
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 SportsHub - Todos os direitos reservados</p>
+  </footer>
 </body>
 </html>
