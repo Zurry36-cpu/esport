@@ -1230,6 +1230,301 @@
     <title>SportScore - Resultados Esportivos em Tempo Real</title>
     <style>
         /* Estilos anteriores mantidos */
+
+        <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportScore - Resultados Esportivos em Tempo Real</title>
+    <style>
+        /* [Manter todos os estilos anteriores] */
+
+        /* Adicionar estilos para o modal de login de usuário */
+        .user-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .user-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .user-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .user-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .user-tab.active {
+            background-color: #1a3151;
+            color: white;
+        }
+        
+        .user-form {
+            display: none;
+        }
+        
+        .user-form.active {
+            display: block;
+        }
+        
+        .social-login {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .social-btn.google {
+            background-color: #DB4437;
+            color: white;
+        }
+        
+        .social-btn.facebook {
+            background-color: #4267B2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- [Manter toda a estrutura HTML anterior] -->
+
+    <!-- Modal de Login/Registro de Usuário -->
+    <div id="userModal" class="user-modal">
+        <div class="user-modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="user-tabs">
+                <button class="user-tab active" data-tab="login">Entrar</button>
+                <button class="user-tab" data-tab="register">Registrar</button>
+            </div>
+            
+            <!-- Formulário de Login -->
+            <form id="userLoginForm" class="user-form active">
+                <div class="form-group">
+                    <label for="userEmail">E-mail:</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Senha:</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="rememberMe"> Lembrar de mim
+                    </label>
+                    <a href="#" style="float: right;">Esqueceu a senha?</a>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </div>
+                
+                <div class="social-login">
+                    <p>Ou entre com:</p>
+                    <button type="button" class="social-btn google">
+                        <img src="https://via.placeholder.com/16x16?text=G" alt="Google" style="margin-right: 5px;">
+                        Google
+                    </button>
+                    <button type="button" class="social-btn facebook">
+                        <img src="https://via.placeholder.com/16x16?text=F" alt="Facebook" style="margin-right: 5px;">
+                        Facebook
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Formulário de Registro -->
+            <form id="userRegisterForm" class="user-form">
+                <div class="form-group">
+                    <label for="regName">Nome Completo:</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">E-mail:</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Senha:</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirmar Senha:</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="acceptTerms" required> Eu aceito os Termos de Uso e Política de Privacidade
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </div>
+                
+                <div class="social-login">
+                    <p>Ou registre-se com:</p>
+                    <button type="button" class="social-btn google">
+                        <img src="https://via.placeholder.com/16x16?text=G" alt="Google" style="margin-right: 5px;">
+                        Google
+                    </button>
+                    <button type="button" class="social-btn facebook">
+                        <img src="https://via.placeholder.com/16x16?text=F" alt="Facebook" style="margin-right: 5px;">
+                        Facebook
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // [Manter todas as funções anteriores]
+
+        // Adicionar funções para o login de usuário
+        function showUserModal() {
+            document.getElementById('userModal').style.display = 'flex';
+            // Mostrar o formulário de login por padrão
+            document.getElementById('userLoginForm').classList.add('active');
+            document.getElementById('userRegisterForm').classList.remove('active');
+            document.querySelector('.user-tab[data-tab="login"]').classList.add('active');
+            document.querySelector('.user-tab[data-tab="register"]').classList.remove('active');
+        }
+
+        function hideUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        function setupUserTabs() {
+            document.querySelectorAll('.user-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Ativar/desativar abas
+                    document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar/ocultar formulários
+                    document.querySelectorAll('.user-form').forEach(form => form.classList.remove('active'));
+                    document.getElementById(`user${tabId.charAt(0).toUpperCase() + tabId.slice(1)}Form`).classList.add('active');
+                });
+            });
+        }
+
+        function setupUserForms() {
+            // Formulário de Login
+            document.getElementById('userLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('userEmail').value;
+                const password = document.getElementById('userPassword').value;
+                
+                // Simulação de login (em um sistema real, isso seria feito no servidor)
+                if (email && password) {
+                    alert(`Login realizado com sucesso!\nE-mail: ${email}`);
+                    hideUserModal();
+                    document.getElementById('userLoginBtn').textContent = 'Minha Conta';
+                } else {
+                    alert('Por favor, preencha todos os campos!');
+                }
+            });
+            
+            // Formulário de Registro
+            document.getElementById('userRegisterForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('regName').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    alert('As senhas não coincidem!');
+                    return;
+                }
+                
+                if (!document.getElementById('acceptTerms').checked) {
+                    alert('Você deve aceitar os Termos de Uso!');
+                    return;
+                }
+                
+                // Simulação de registro (em um sistema real, isso seria feito no servidor)
+                if (name && email && password) {
+                    alert(`Cadastro realizado com sucesso!\nNome: ${name}\nE-mail: ${email}`);
+                    hideUserModal();
+                    document.getElementById('userLoginBtn').textContent = 'Minha Conta';
+                } else {
+                    alert('Por favor, preencha todos os campos!');
+                }
+            });
+            
+            // Botões de login social (simulação)
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const provider = this.classList.contains('google') ? 'Google' : 'Facebook';
+                    alert(`Redirecionando para login com ${provider}...\n(Esta é apenas uma simulação)`);
+                });
+            });
+        }
+
+        // Modificar a inicialização para incluir o login de usuário
+        document.addEventListener('DOMContentLoaded', function() {
+            // [Manter todas as outras inicializações]
+            
+            // Configurar botões de login/registro do usuário
+            document.querySelector('.register').addEventListener('click', function(e) {
+                e.preventDefault();
+                showUserModal();
+                // Mostrar diretamente o formulário de registro
+                document.querySelector('.user-tab[data-tab="register"]').click();
+            });
+            
+            document.getElementById('userLoginBtn').addEventListener('click', function(e) {
+                if (this.textContent === 'Minha Conta') {
+                    // Mostrar menu do usuário logado
+                    alert('Menu da conta do usuário\n(Esta é apenas uma simulação)');
+                } else if (appState.isAdmin) {
+                    logout();
+                } else {
+                    showUserModal();
+                }
+            });
+            
+            // Configurar abas e formulários de usuário
+            setupUserTabs();
+            setupUserForms();
+            
+            // Fechar modal de usuário ao clicar no X ou fora
+            document.querySelector('#userModal .close-modal').addEventListener('click', hideUserModal);
+            document.getElementById('userModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideUserModal();
+                }
+            });
+        });
         
         /* Novos estilos para o painel de admin */
         .admin-panel {
