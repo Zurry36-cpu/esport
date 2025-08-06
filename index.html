@@ -5,196 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FlashScore Pro</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0d0d0d;
-      color: #fff;
-    }
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(90deg, #00c853, #009624);
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    }
-    header h1 {
-      font-size: 1.8em;
-    }
-    .search-box input {
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      outline: none;
-      width: 200px;
-    }
-    nav {
-      position: fixed;
-      top: 60px;
-      left: 0;
-      width: 220px;
-      background: #1a1a1a;
-      height: 100vh;
-      padding-top: 20px;
-      overflow-y: auto;
-    }
-    nav ul {
-      list-style: none;
-    }
-    nav ul li {
-      padding: 12px 20px;
-      cursor: pointer;
-      border-left: 4px solid transparent;
-      transition: 0.3s;
-    }
-    nav ul li:hover {
-      background: #333;
-      border-left: 4px solid #00c853;
-    }
-    main {
-      margin-left: 220px;
-      margin-top: 80px;
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 15px;
-      border-bottom: 2px solid #00c853;
-      padding-bottom: 5px;
-    }
-    .match-card {
-      background: #1e1e1e;
-      padding: 15px;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 8px;
-      transition: transform 0.2s;
-    }
-    .match-card:hover {
-      transform: scale(1.02);
-    }
-    .teams {
-      display: flex;
-      flex-direction: column;
-    }
-    .team {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .team img {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-    }
-    .score {
-      font-size: 1.6em;
-      font-weight: bold;
-    }
-    .status {
-      font-size: 0.9em;
-      color: #ccc;
-    }
-    footer {
-      text-align: center;
-      background: #1a1a1a;
-      padding: 10px;
-      margin-top: 20px;
-    }
+    /* --- (estilos anteriores iguais) --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #0d0d0d; color: #fff; }
+    header { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #00c853, #009624);
+      padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+    header h1 { font-size: 1.8em; }
+    .search-box input { padding: 8px; border: none; border-radius: 5px; outline: none; width: 200px; }
+    #menu-toggle { display: none; background:none; border:none; color:#fff; font-size:1.5em; }
+    nav { position: fixed; top: 60px; left: 0; width: 220px; background: #1a1a1a; height: 100vh; padding-top: 20px;
+      overflow-y: auto; transition: 0.3s; }
+    nav ul { list-style: none; }
+    nav ul li { padding: 12px 20px; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s; }
+    nav ul li:hover { background: #333; border-left: 4px solid #00c853; }
+    main { margin-left: 220px; margin-top: 80px; padding: 20px; }
+    h2 { margin-bottom: 15px; border-bottom: 2px solid #00c853; padding-bottom: 5px; }
+    .match-card { background: #1e1e1e; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between;
+      align-items: center; border-radius: 8px; transition: transform 0.2s; cursor: pointer; }
+    .match-card:hover { transform: scale(1.02); }
+    .teams { display: flex; flex-direction: column; }
+    .team { display: flex; align-items: center; gap: 8px; }
+    .team img { width: 24px; height: 24px; border-radius: 50%; }
+    .score { font-size: 1.6em; font-weight: bold; }
+    .status { font-size: 0.9em; color: #ccc; }
+    .live::before { content: 'AO VIVO'; color: #fff; background: red; padding: 2px 8px; border-radius: 12px; font-size: 0.7em;
+      animation: pulse 1s infinite; margin-right: 10px; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    footer { text-align: center; background: #1a1a1a; padding: 10px; margin-top: 20px; }
+    #loading { text-align:center; padding:20px; }
     @media (max-width: 768px) {
-      nav {
-        width: 100%;
-        height: auto;
-        position: relative;
-      }
-      main {
-        margin-left: 0;
-        margin-top: 140px;
-      }
+      nav { display: none; width: 100%; height: auto; position: relative; }
+      nav.active { display: block; }
+      main { margin-left: 0; margin-top: 140px; }
+      #menu-toggle { display: inline; }
     }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+      justify-content: center; align-items: center; z-index: 2000; }
+    .modal-content { background: #1e1e1e; padding: 20px; border-radius: 10px; width: 400px; max-width: 90%; }
+    .modal-content h3 { margin-bottom: 10px; }
+    .close { float: right; cursor: pointer; font-size: 1.2em; }
+    ul.details { list-style: none; padding: 0; }
+    ul.details li { padding: 5px 0; border-bottom: 1px solid #333; }
   </style>
 </head>
 <body>
   <header>
     <h1>FlashScore Pro</h1>
-    <div class="search-box">
-      <input type="text" placeholder="Buscar partidas..." />
-    </div>
+    <div class="search-box"><input type="text" placeholder="Buscar partidas..." /></div>
+    <button id="menu-toggle">☰</button>
   </header>
   <nav>
     <ul>
-      <li>⚽ Futebol</li>
-      <li>🏀 Basquete</li>
-      <li>🎾 Tênis</li>
-      <li>🏐 Vôlei</li>
-      <li>🏒 Hóquei</li>
-      <li>⚾ Beisebol</li>
+      <li>⚽ Futebol</li><li>🏀 Basquete</li><li>🎾 Tênis</li><li>🏐 Vôlei</li><li>🏒 Hóquei</li><li>⚾ Beisebol</li>
     </ul>
   </nav>
   <main>
-    <h2>Ao Vivo</h2>
-    <div class="match-card live">
-      <div class="teams">
-        <div class="team"><img src="https://source.unsplash.com/24x24/?team" alt="">Time A</div>
-        <div class="team"><img src="https://source.unsplash.com/24x24/?team" alt="">Time B</div>
+    <div id="loading">Carregando partidas...</div>
+    <div id="conteudo" style="display:none;">
+      <h2>Ao Vivo</h2>
+      <div class="match-card live" data-info='{"gols":["Gabriel Jesus 12'","Saka 33'","Sterling 55'"],"cartoes":["Thiago Silva 🟨"],"subs":["Havertz ⇄ Nketiah (65')"]}'>
+        <div class="teams">
+          <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">Arsenal</div>
+          <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Chelsea_FC.svg">Chelsea</div>
+        </div>
+        <div class="score">2 - 1</div>
+        <div class="status">68'</div>
       </div>
-      <div class="score">2 - 1</div>
-      <div class="status">68'</div>
-    </div>
-
-    <h2>Próximos Jogos</h2>
-    <div class="match-card">
-      <div class="teams">
-        <div class="team"><img src="https://source.unsplash.com/24x24/?club" alt="">Time C</div>
-        <div class="team"><img src="https://source.unsplash.com/24x24/?club" alt="">Time D</div>
-      </div>
-      <div class="status">20:00</div>
-    </div>
-    <div class="match-card">
-      <div class="teams">
-        <div class="team"><img src="https://source.unsplash.com/24x24/?football" alt="">Time E</div>
-        <div class="team"><img src="https://source.unsplash.com/24x24/?football" alt="">Time F</div>
-      </div>
-      <div class="status">22:30</div>
-    </div>
-
-    <h2>Resultados Recentes</h2>
-    <div class="match-card">
-      <div class="teams">
-        <div class="team"><img src="https://source.unsplash.com/24x24/?soccer" alt="">Time G</div>
-        <div class="team"><img src="https://source.unsplash.com/24x24/?soccer" alt="">Time H</div>
-      </div>
-      <div class="score">3 - 0</div>
-      <div class="status">Encerrado</div>
     </div>
   </main>
-  <footer>
-    &copy; 2025 FlashScore Pro - Todos os direitos reservados
-  </footer>
+  <footer>&copy; 2025 FlashScore Pro - Todos os direitos reservados</footer>
+
+  <!-- Modal -->
+  <div class="modal" id="matchModal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h3>Detalhes da Partida</h3>
+      <strong>Gols:</strong>
+      <ul class="details" id="gols"></ul>
+      <strong>Cartões:</strong>
+      <ul class="details" id="cartoes"></ul>
+      <strong>Substituições:</strong>
+      <ul class="details" id="subs"></ul>
+    </div>
+  </div>
 
   <script>
-    // Simulação de atualização automática do placar
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      document.querySelector('nav').classList.toggle('active');
+    });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('conteudo').style.display = 'block';
+      }, 1000);
+    });
+
     setInterval(() => {
       const scoreEl = document.querySelector('.live .score');
       if (scoreEl) {
         let scores = scoreEl.textContent.split(' - ').map(Number);
-        if (Math.random() > 0.7){
+        if (Math.random() > 0.7) {
           scores[Math.floor(Math.random() * 2)] += 1;
           scoreEl.textContent = `${scores[0]} - ${scores[1]}`;
         }
       }
     }, 5000);
+
+    // Modal de detalhes
+    const modal = document.getElementById('matchModal');
+    const closeModal = document.getElementById('closeModal');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const data = JSON.parse(card.dataset.info);
+        document.getElementById('gols').innerHTML = data.gols.map(g => `<li>${g}</li>`).join('');
+        document.getElementById('cartoes').innerHTML = data.cartoes.map(c => `<li>${c}</li>`).join('');
+        document.getElementById('subs').innerHTML = data.subs.map(s => `<li>${s}</li>`).join('');
+        modal.style.display = 'flex';
+      });
+    });
+
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = 'none'; });
   </script>
 </body>
 </html>
