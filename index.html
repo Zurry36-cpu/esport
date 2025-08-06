@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FlashScore Pro</title>
   <style>
-    /* --- (estilos anteriores iguais) --- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background-color: #0d0d0d; color: #fff; }
     header { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #00c853, #009624);
@@ -47,8 +46,14 @@
     .modal-content { background: #1e1e1e; padding: 20px; border-radius: 10px; width: 400px; max-width: 90%; }
     .modal-content h3 { margin-bottom: 10px; }
     .close { float: right; cursor: pointer; font-size: 1.2em; }
-    ul.details { list-style: none; padding: 0; }
-    ul.details li { padding: 5px 0; border-bottom: 1px solid #333; }
+    ul.details { list-style: none; padding: 0; margin: 10px 0 20px; }
+    ul.details li { padding: 8px 0; border-bottom: 1px solid #333; display: flex; align-items: center; }
+    .event-time { background: #00c853; color: white; padding: 2px 6px; border-radius: 12px; font-size: 0.8em; margin-right: 10px; }
+    .event-type { margin-right: 5px; }
+    .event-player { font-weight: bold; }
+    .event-team { color: #aaa; font-size: 0.9em; margin-left: 5px; }
+    .yellow-card { color: #ffeb3b; }
+    .red-card { color: #f44336; }
   </style>
 </head>
 <body>
@@ -66,7 +71,14 @@
     <div id="loading">Carregando partidas...</div>
     <div id="conteudo" style="display:none;">
       <h2>Ao Vivo</h2>
-      <div class="match-card live" data-info='{"gols":["Gabriel Jesus 12'","Saka 33'","Sterling 55'"],"cartoes":["Thiago Silva 🟨"],"subs":["Havertz ⇄ Nketiah (65')"]}'>
+      <div class="match-card live" data-info='{
+        "events": [
+          {"type": "goal", "time": "12", "player": "Gabriel Jesus", "team": "Arsenal"},
+          {"type": "goal", "time": "33", "player": "Bukayo Saka", "team": "Arsenal"},
+          {"type": "goal", "time": "55", "player": "Raheem Sterling", "team": "Chelsea"},
+          {"type": "yellow", "time": "28", "player": "Thiago Silva", "team": "Chelsea"},
+          {"type": "sub", "time": "65", "playerOut": "Kai Havertz", "playerIn": "Eddie Nketiah", "team": "Arsenal"}
+        ]}'>
         <div class="teams">
           <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">Arsenal</div>
           <div class="team"><img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Chelsea_FC.svg">Chelsea</div>
@@ -78,17 +90,12 @@
   </main>
   <footer>&copy; 2025 FlashScore Pro - Todos os direitos reservados</footer>
 
-  <!-- Modal -->
+  <!-- Modal de detalhes -->
   <div class="modal" id="matchModal">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
       <h3>Detalhes da Partida</h3>
-      <strong>Gols:</strong>
-      <ul class="details" id="gols"></ul>
-      <strong>Cartões:</strong>
-      <ul class="details" id="cartoes"></ul>
-      <strong>Substituições:</strong>
-      <ul class="details" id="subs"></ul>
+      <div id="matchInfo"></div>
     </div>
   </div>
 
@@ -122,9 +129,75 @@
     document.querySelectorAll('.match-card').forEach(card => {
       card.addEventListener('click', () => {
         const data = JSON.parse(card.dataset.info);
-        document.getElementById('gols').innerHTML = data.gols.map(g => `<li>${g}</li>`).join('');
-        document.getElementById('cartoes').innerHTML = data.cartoes.map(c => `<li>${c}</li>`).join('');
-        document.getElementById('subs').innerHTML = data.subs.map(s => `<li>${s}</li>`).join('');
+        const matchInfo = document.getElementById('matchInfo');
+        matchInfo.innerHTML = '';
+        
+        // Organiza eventos por tempo
+        data.events.sort((a, b) => b.time - a.time);
+        
+        // Agrupa por tipo de evento
+        const eventsByType = {
+          goal: [],
+          yellow: [],
+          red: [],
+          sub: []
+        };
+        
+        data.events.forEach(event => {
+          eventsByType[event.type].push(event);
+        });
+        
+        // Cria HTML para cada tipo de evento
+        if (eventsByType.goal.length > 0) {
+          const goalsHtml = document.createElement('div');
+          goalsHtml.innerHTML = '<h4>Gols</h4><ul class="details"></ul>';
+          eventsByType.goal.forEach(goal => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span class="event-time">${goal.time}'</span>
+              <span class="event-type">⚽</span>
+              <span class="event-player">${goal.player}</span>
+              <span class="event-team">(${goal.team})</span>
+            `;
+            goalsHtml.querySelector('ul').appendChild(li);
+          });
+          matchInfo.appendChild(goalsHtml);
+        }
+        
+        if (eventsByType.yellow.length > 0) {
+          const cardsHtml = document.createElement('div');
+          cardsHtml.innerHTML = '<h4>Cartões Amarelos</h4><ul class="details"></ul>';
+          eventsByType.yellow.forEach(card => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span class="event-time">${card.time}'</span>
+              <span class="event-type yellow-card">🟨</span>
+              <span class="event-player">${card.player}</span>
+              <span class="event-team">(${card.team})</span>
+            `;
+            cardsHtml.querySelector('ul').appendChild(li);
+          });
+          matchInfo.appendChild(cardsHtml);
+        }
+        
+        if (eventsByType.sub.length > 0) {
+          const subsHtml = document.createElement('div');
+          subsHtml.innerHTML = '<h4>Substituições</h4><ul class="details"></ul>';
+          eventsByType.sub.forEach(sub => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span class="event-time">${sub.time}'</span>
+              <span class="event-type">🔄</span>
+              <span class="event-player">${sub.playerOut}</span>
+              <span> ⇄ </span>
+              <span class="event-player">${sub.playerIn}</span>
+              <span class="event-team">(${sub.team})</span>
+            `;
+            subsHtml.querySelector('ul').appendChild(li);
+          });
+          matchInfo.appendChild(subsHtml);
+        }
+        
         modal.style.display = 'flex';
       });
     });
