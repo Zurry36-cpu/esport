@@ -3,134 +3,198 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FlashScore Clone</title>
+  <title>FlashScore Pro</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #fff;
+    * {
       margin: 0;
       padding: 0;
-      display: grid;
-      grid-template-columns: 250px 1fr;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d0d0d;
+      color: #fff;
     }
     header {
-      grid-column: span 2;
-      background: #1e1e1e;
-      padding: 20px;
-      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #00c853, #009624);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    header h1 {
       font-size: 1.8em;
-      font-weight: bold;
-      color: #00ff00;
+    }
+    .search-box input {
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+      width: 200px;
     }
     nav {
-      background: #1e1e1e;
-      padding: 20px;
-      height: calc(100vh - 60px);
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 220px;
+      background: #1a1a1a;
+      height: 100vh;
+      padding-top: 20px;
       overflow-y: auto;
     }
     nav ul {
       list-style: none;
-      padding: 0;
     }
     nav ul li {
-      padding: 10px;
+      padding: 12px 20px;
       cursor: pointer;
-      border-bottom: 1px solid #333;
+      border-left: 4px solid transparent;
+      transition: 0.3s;
     }
     nav ul li:hover {
       background: #333;
+      border-left: 4px solid #00c853;
     }
     main {
+      margin-left: 220px;
+      margin-top: 80px;
       padding: 20px;
-      background: #181818;
-      overflow-y: auto;
     }
-    .live-match {
-      background: #282828;
-      padding: 15px;
+    h2 {
       margin-bottom: 15px;
-      border-left: 5px solid #00ff00;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 5px;
+      border-bottom: 2px solid #00c853;
+      padding-bottom: 5px;
     }
-    .match {
-      background: #202020;
+    .match-card {
+      background: #1e1e1e;
       padding: 15px;
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 5px;
+      border-radius: 8px;
+      transition: transform 0.2s;
+    }
+    .match-card:hover {
+      transform: scale(1.02);
     }
     .teams {
       display: flex;
       flex-direction: column;
-      font-weight: bold;
+    }
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .team img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
     }
     .score {
-      font-size: 1.5em;
-      color: #fff;
+      font-size: 1.6em;
+      font-weight: bold;
+    }
+    .status {
+      font-size: 0.9em;
+      color: #ccc;
     }
     footer {
-      grid-column: span 2;
-      background: #1e1e1e;
       text-align: center;
+      background: #1a1a1a;
       padding: 10px;
-      color: #777;
+      margin-top: 20px;
+    }
+    @media (max-width: 768px) {
+      nav {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      main {
+        margin-left: 0;
+        margin-top: 140px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>FlashScore Clone</header>
+  <header>
+    <h1>FlashScore Pro</h1>
+    <div class="search-box">
+      <input type="text" placeholder="Buscar partidas..." />
+    </div>
+  </header>
   <nav>
     <ul>
-      <li>Futebol</li>
-      <li>Basquete</li>
-      <li>Tênis</li>
-      <li>Vôlei</li>
-      <li>Hóquei</li>
-      <li>Beisebol</li>
+      <li>⚽ Futebol</li>
+      <li>🏀 Basquete</li>
+      <li>🎾 Tênis</li>
+      <li>🏐 Vôlei</li>
+      <li>🏒 Hóquei</li>
+      <li>⚾ Beisebol</li>
     </ul>
   </nav>
   <main>
     <h2>Ao Vivo</h2>
-    <div class="live-match">
+    <div class="match-card live">
       <div class="teams">
-        <span>Time A</span>
-        <span>Time B</span>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?team" alt="">Time A</div>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?team" alt="">Time B</div>
       </div>
       <div class="score">2 - 1</div>
-      <div>68'</div>
+      <div class="status">68'</div>
     </div>
 
     <h2>Próximos Jogos</h2>
-    <div class="match">
+    <div class="match-card">
       <div class="teams">
-        <span>Time C</span>
-        <span>Time D</span>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?club" alt="">Time C</div>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?club" alt="">Time D</div>
       </div>
-      <div>20:00</div>
+      <div class="status">20:00</div>
     </div>
-    <div class="match">
+    <div class="match-card">
       <div class="teams">
-        <span>Time E</span>
-        <span>Time F</span>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?football" alt="">Time E</div>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?football" alt="">Time F</div>
       </div>
-      <div>22:30</div>
+      <div class="status">22:30</div>
     </div>
 
     <h2>Resultados Recentes</h2>
-    <div class="match">
+    <div class="match-card">
       <div class="teams">
-        <span>Time G</span>
-        <span>Time H</span>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?soccer" alt="">Time G</div>
+        <div class="team"><img src="https://source.unsplash.com/24x24/?soccer" alt="">Time H</div>
       </div>
       <div class="score">3 - 0</div>
+      <div class="status">Encerrado</div>
     </div>
   </main>
-  <footer>&copy; 2025 FlashScore Clone - Todos os direitos reservados</footer>
+  <footer>
+    &copy; 2025 FlashScore Pro - Todos os direitos reservados
+  </footer>
+
+  <script>
+    // Simulação de atualização automática do placar
+    setInterval(() => {
+      const scoreEl = document.querySelector('.live .score');
+      if (scoreEl) {
+        let scores = scoreEl.textContent.split(' - ').map(Number);
+        if (Math.random() > 0.7) {
+          scores[Math.floor(Math.random() * 2)] += 1;
+          scoreEl.textContent = `${scores[0]} - ${scores[1]}`;
+        }
+      }
+    }, 5000);
+  </script>
 </body>
 </html>
